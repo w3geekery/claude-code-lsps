@@ -1,0 +1,8 @@
+{
+  "name": "lsp-servers",
+  "description": "SCSS/CSS/Sass, Angular templates, YAML language servers",
+  "version": "1.0.0",
+  "author": {
+    "name": "w3geekery"
+  }
+}
