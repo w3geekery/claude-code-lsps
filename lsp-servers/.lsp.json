@@ -23,23 +23,5 @@
     "initializationOptions": {},
     "settings": {},
     "maxRestarts": 3
-  },
-  "angular": {
-    "command": "ngserver",
-    "args": [
-      "--stdio",
-      "--tsProbeLocations",
-      "/Users/cstacer/Projects/zb/ui/node_modules",
-      "--ngProbeLocations",
-      "/Users/cstacer/Projects/zb/ui/node_modules"
-    ],
-    "transport": "stdio",
-    "extensionToLanguage": {
-      ".html": "html"
-    },
-    "initializationOptions": {},
-    "settings": {},
-    "startupTimeout": 120000,
-    "maxRestarts": 3
   }
 }

@@ -2,7 +2,7 @@
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "w3geekery-lsps",
   "version": "1.0.0",
-  "description": "LSP servers for SCSS/CSS/Sass, Angular templates, and YAML — for use with the Claude Code LSP tool.",
+  "description": "LSP servers for SCSS/CSS/Sass and YAML — for use with the Claude Code LSP tool. (Angular template support documented separately via vscode-mcp; see README.)",
   "owner": {
     "name": "w3geekery"
   },
@@ -11,9 +11,9 @@
       "name": "lsp-servers",
       "version": "1.0.0",
       "source": "./lsp-servers",
-      "description": "SCSS/CSS/Sass, Angular templates, YAML language servers for Claude Code.",
+      "description": "SCSS/CSS/Sass and YAML language servers for Claude Code.",
       "category": "development",
-      "tags": ["lsp", "scss", "sass", "angular", "yaml"],
+      "tags": ["lsp", "scss", "sass", "yaml"],
       "author": {
         "name": "w3geekery"
       },
@@ -41,24 +41,6 @@
           },
           "initializationOptions": {},
           "settings": {},
-          "maxRestarts": 3
-        },
-        "angular": {
-          "command": "ngserver",
-          "args": [
-            "--stdio",
-            "--tsProbeLocations",
-            "/Users/cstacer/Projects/zb/ui/node_modules",
-            "--ngProbeLocations",
-            "/Users/cstacer/Projects/zb/ui/node_modules"
-          ],
-          "transport": "stdio",
-          "extensionToLanguage": {
-            ".html": "html"
-          },
-          "initializationOptions": {},
-          "settings": {},
-          "startupTimeout": 120000,
           "maxRestarts": 3
         }
       }
