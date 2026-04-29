@@ -1,0 +1,38 @@
+{
+  "sass": {
+    "command": "some-sass-language-server",
+    "args": ["--stdio"],
+    "transport": "stdio",
+    "extensionToLanguage": {
+      ".scss": "scss",
+      ".sass": "sass",
+      ".css": "css"
+    },
+    "initializationOptions": {},
+    "settings": {},
+    "maxRestarts": 3
+  },
+  "yaml": {
+    "command": "yaml-language-server",
+    "args": ["--stdio"],
+    "transport": "stdio",
+    "extensionToLanguage": {
+      ".yaml": "yaml",
+      ".yml": "yaml"
+    },
+    "initializationOptions": {},
+    "settings": {},
+    "maxRestarts": 3
+  },
+  "angular": {
+    "command": "ngserver",
+    "args": ["--stdio"],
+    "transport": "stdio",
+    "extensionToLanguage": {
+      ".html": "html"
+    },
+    "initializationOptions": {},
+    "settings": {},
+    "maxRestarts": 3
+  }
+}
