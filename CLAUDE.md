@@ -182,7 +182,8 @@ Expected: hover info showing the symbol's TypeScript type, definition pointing i
 
 | File extension | Use |
 |---|---|
-| `.ts` `.tsx` `.js` `.jsx` | Built-in `LSP` tool |
+| `.ts` `.tsx` `.js` `.jsx` (quick targeted lookup) | Built-in `LSP` tool |
+| `.ts` `.tsx` `.js` `.jsx` (workspace-wide ops, diagnostics, rename) | `mcp__vscode-mcp__*` |
 | `.scss` `.sass` `.css` | Built-in `LSP` tool |
 | `.yaml` `.yml` | Built-in `LSP` tool |
 | `.html` (Angular component templates) | `mcp__vscode-mcp__get_symbol_lsp_info` |
@@ -190,6 +191,43 @@ Expected: hover info showing the symbol's TypeScript type, definition pointing i
 | Workspace-wide rename | `mcp__vscode-mcp__rename_symbol` |
 
 For non-symbol queries — string literals, error messages, log lines, i18n keys, HTML class names treated as text — fall back to `grep`. LSP/MCP doesn't help with text.
+
+### Why both TypeScript routes are useful
+
+The built-in `LSP` tool's TypeScript plugin (`typescript-lsp@claude-plugins-official`) and vscode-mcp's TS handling both wrap the same underlying engine — TypeScript's `tsserver`. The differences are in workspace context and latency:
+
+| Aspect | Built-in `LSP` (typescript-lsp plugin) | vscode-mcp |
+|---|---|---|
+| Engine | `tsserver` via `typescript-language-server` (LSP wrapper) | `tsserver` directly via VSCode |
+| Workspace context | Limited by Claude Code harness (no cross-project graph init in some cases) | Full — VSCode loads the workspace, builds the project graph |
+| Cold-start cost | Spawns a new tsserver per Claude session | Reuses VSCode's already-warm tsserver |
+| Diagnostics speed | Has to re-analyze | Instant (project already loaded) |
+
+**When each wins:**
+
+- **Quick targeted lookup** in the file you're editing (`hover`, `goToDefinition`, `documentSymbol`): built-in `LSP` is fine and slightly lower latency.
+- **Workspace-wide operations** — find all references across projects, rename a symbol used in many files, real-time diagnostics, anything that needs the full project graph: `vscode-mcp` wins. Especially in multi-project Angular CLI workspaces where libs are referenced by multiple apps.
+- **Diagnostics specifically** (`mcp__vscode-mcp__get_diagnostics`): vscode-mcp is dramatically better. Replaces 60-second `tsc --noEmit` runs with sub-second answers because the analysis already exists in VSCode.
+
+Don't drop either. They're complementary — fast-path versus workspace-aware path.
+
+### Why SCSS uses the standalone route only (not vscode-mcp)
+
+For SCSS, the comparison is different from TypeScript:
+
+| Aspect | Built-in `LSP` (some-sass-language-server) | vscode-mcp (VSCode's bundled CSS server) |
+|---|---|---|
+| Engine | `some-sass-language-server` (Wkillerud) | VSCode's bundled `vscode-css-language-server` |
+| Cross-file `@use`/`@forward` resolution | Full | Basic / limited |
+| `$variable`, `@mixin`, `@function`, `%placeholder` symbol graph | Full | Limited |
+| Single-file completion / hover | Yes | Yes |
+
+The standalone server (`some-sass-language-server`) is more capable than the SCSS support VSCode bundles by default. So for SCSS:
+
+- **Always use the built-in `LSP` tool**.
+- vscode-mcp has no advantage for SCSS unless the developer separately installs the [Some Sass VSCode extension](https://marketplace.visualstudio.com/items?itemName=SomewhatStationery.some-sass), which would just duplicate the standalone route.
+
+The dual-route argument that applies to TypeScript does **not** carry over to SCSS.
 
 ---
 
